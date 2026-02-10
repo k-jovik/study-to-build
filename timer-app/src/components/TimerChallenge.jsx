@@ -28,7 +28,6 @@ export default function TimerChallenge({ title, targetTime }) {
   function handleStop() {
     clearInterval(timer.current);
     dialog.current.open();
-
   }
 
   return (
