@@ -16,7 +16,7 @@ function Timer({ time, color, onTimeout }) {
       clearInterval(interval);
       clearTimeout(timerSet);
     };
-  }, [time,onTimeout]);
+  }, [time, onTimeout]);
 
   let colorType = "[&::-webkit-progress-value]:bg-purple-500";
   if (color === "buttonClicked") {

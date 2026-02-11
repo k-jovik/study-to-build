@@ -1,13 +1,17 @@
 import Timer from "./Timer";
 import QUESTIONS from "./questions.js";
 import Question from "./Question";
-import { useState, React } from "react";
+import { useState, useMemo } from "react";
 import Anwsers from "./Anwsers.jsx";
 import { useCallback } from "react";
+import Summary from "./Summary.jsx";
 
 function Quiz() {
   const [userAnwsers, setUserAnwsers] = useState([]);
   const [select, setSelectedAnwser] = useState("");
+
+  const currentIndex = userAnwsers.length;
+  const quizComplete = currentIndex === QUESTIONS.length;
 
   let timerDuration = 10000;
   if (select === "buttonClicked") {
@@ -16,11 +20,16 @@ function Quiz() {
     timerDuration = 2000;
   }
 
-  const currentIndex = userAnwsers.length;
+  const shuffledAnwsers = useMemo(() => {
+    if (quizComplete) return [];
+
+    const answers = [...QUESTIONS[currentIndex].answers];
+    answers.sort(() => Math.random() - 0.5);
+    return answers;
+  }, [currentIndex]);
 
   const handleSelectUser = useCallback(
     function handleSelectUser(anwser) {
-      
       if (anwser === null) {
         setUserAnwsers((prevAnwsers) => {
           return [...prevAnwsers, null];
@@ -31,7 +40,7 @@ function Quiz() {
       setSelectedAnwser("buttonClicked");
 
       setTimeout(() => {
-        if (anwser === QUESTIONS[currentIndex].answers[0]) {
+        if (anwser === QUESTIONS[currentIndex].correctAnswer) {
           setSelectedAnwser("correct");
         } else {
           setSelectedAnwser("wrong");
@@ -55,13 +64,8 @@ function Quiz() {
     [handleSelectUser],
   );
 
-  const quizComplete = currentIndex === QUESTIONS.length;
   if (quizComplete) {
-    return (
-      <div>
-        <p>Quiz complete</p>
-      </div>
-    );
+    return <Summary userAnwsers={userAnwsers} />;
   }
 
   return (
@@ -74,10 +78,7 @@ function Quiz() {
           onTimeout={select === "" ? updateTime : () => {}}
         />
         <Question text={QUESTIONS[currentIndex].text} />
-        <Anwsers
-          onSelect={handleSelectUser}
-          answers={QUESTIONS[currentIndex].answers}
-        />
+        <Anwsers onSelect={handleSelectUser} answers={shuffledAnwsers} />
       </div>
     </div>
   );
