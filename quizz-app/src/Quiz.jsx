@@ -8,8 +8,6 @@ import { useCallback } from "react";
 function Quiz() {
   const [userAnwsers, setUserAnwsers] = useState([]);
   const [select, setSelectedAnwser] = useState("");
-  
-  
 
   let timerDuration = 10000;
   if (select === "buttonClicked") {
@@ -19,10 +17,10 @@ function Quiz() {
   }
 
   const currentIndex = userAnwsers.length;
-  console.log("questions" ,QUESTIONS[currentIndex]);
 
   const handleSelectUser = useCallback(
     function handleSelectUser(anwser) {
+      
       if (anwser === null) {
         setUserAnwsers((prevAnwsers) => {
           return [...prevAnwsers, null];
@@ -58,19 +56,23 @@ function Quiz() {
   );
 
   const quizComplete = currentIndex === QUESTIONS.length;
-  if (quizComplete){
+  if (quizComplete) {
     return (
       <div>
         <p>Quiz complete</p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex flex-col gap-5 h-full w-full min-h-screen pt-10 items-center">
       <h1 className="text-center ">REACT QUIZ</h1>
       <div className="bg-purple-950 w-3/4 min-h-100 flex flex-col items-center gap-3 p-8">
-        <Timer color={select} time={timerDuration} onTimeout={updateTime} />
+        <Timer
+          color={select}
+          time={timerDuration}
+          onTimeout={select === "" ? updateTime : () => {}}
+        />
         <Question text={QUESTIONS[currentIndex].text} />
         <Anwsers
           onSelect={handleSelectUser}

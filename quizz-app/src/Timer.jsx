@@ -18,7 +18,7 @@ function Timer({ time, color, onTimeout }) {
     };
   }, [time,onTimeout]);
 
-  let colorType = "";
+  let colorType = "[&::-webkit-progress-value]:bg-purple-500";
   if (color === "buttonClicked") {
     colorType = "[&::-webkit-progress-value]:bg-yellow-500";
   } else if (color === "correct") {
